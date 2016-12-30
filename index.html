@@ -1,0 +1,81 @@
+<!doctype html>
+<html ng-app="booky">
+  <head>
+    <title>Bookmarks Manager</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+  </head>
+  <body>
+    <h2>Bookmarks Manager</h2>
+    <div ng-controller="MainController as main">
+     <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          <h4>Category</h4>
+            <ul class="nav nav-sidebar">
+                <li ng-repeat="category in main.categories" ng-class="{'active':main.iscurrentCategory(category)}">
+                  <a href="#" ng-click="main.setcurrentCategory(category)">{{category.name}}</a>
+                </li>
+                <li><a href="#" ng-click="main.setcurrentCategory(null)">Show all</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-7 col-md-6 main">
+          <h4>Bookmarks</h4>
+        <div ng-class="{'active':main.isSelectedBookmark(bookmark.id)}" ng-repeat="bookmark in main.bookmarks | filter: {category:main.currentCategory.name}">
+          <button type="button" ng-click="main.deleteBookmark(bookmark);" class="close">&times;</button>
+          <button type="button" ng-click="main.setEditedBookmark(bookmark);main.startEditing();" class="btn btn-link">
+            <span class="glyphicon glyphicon-pencil"></span></button>
+            <a href="{{bookmark.url}}" target="_blank">{{bookmark.title}}</a>         
+        </div>
+        <hr/>
+        <!-- CREATING -->
+        <div ng-if="main.shouldShowCreating();">
+          <button class="btn btn-link" ng-click="main.startCreating();">
+            <span class="glyphicon glyphicon-plus"></span>
+            Create Bookmark
+          </button>
+          <form class="create-form" ng-show="main.isCreating" role="form" ng-submit="main.createBookmark(main.newBookmark);">
+            <div class="form-group">
+              <label for="newBookmarkTitle">Bookmark Title</label>
+              <input type="text" class="form-control" id="newBookmarkTitle" ng-model="main.newBookmark.title">
+            </div>
+
+            <div class="form-group">
+              <label for="newBookmarkURL">Bookmark URL</label>
+              <input type="text" class="form-control" id="newBookmarkURL" ng-model="main.newBookmark.url">
+            </div>
+            <button type="submit" class="btn btn-info btn-lg"> Create </button>
+            <button type="button" ng-click="main.cancelCreating();" class="btn btn-default btn-lg pull-right"> Cancel</button>
+          </form>
+        </div>
+        <!-- EDITINC -->
+        <div ng-if="main.shouldShowEditing();">        
+        <h4>Editing {{main.editedBookmark.title}}</h4>
+        <form class="edit-form" ng-submit="main.updateBookmark(main.editedBookmark);" role="form">
+
+          <div class="form-group">
+              <label>Bookmark Title</label>
+              <input type="text" class="form-control" ng-model="main.editedBookmark.title">
+            </div>
+
+            <div class="form-group">
+              <label>Bookmark URL</label>
+              <input type="text" class="form-control" ng-model="main.editedBookmark.url">
+            </div>
+            <button type="submit" class="btn btn-info btn-lg"> Save </button>
+            <button type="button" ng-click="main.cancelEditing();" class="btn btn-default btn-lg pull-right"> Cancel</button>
+
+        </form>
+        </div>
+        </div>
+      </div>
+     </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.3/lodash.min.js" ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+    <script src="app/booky.js"></script>
+  </body>
+</html>
